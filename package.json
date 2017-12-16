@@ -1,0 +1,22 @@
+{
+  "name": "test7",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "bsb -make-world",
+    "start": "bsb -make-world -w",
+    "clean": "bsb -clean-world",
+    "all": "npm-run-all --parallel start watch",
+    "watch": "nodemon lib/js/src/day$NR.bs.js"
+  },
+  "keywords": [
+    "BuckleScript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "bs-platform": "^2.1.0",
+    "nodemon": "^1.13.3",
+    "npm-run-all": "^4.1.2",
+    "npm-watch": "^0.3.0"
+  }
+}
