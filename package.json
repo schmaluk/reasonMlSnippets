@@ -6,7 +6,8 @@
     "start": "bsb -make-world -w",
     "clean": "bsb -clean-world",
     "all": "npm-run-all --parallel start watch",
-    "watch": "nodemon lib/js/src/day$NR.bs.js"
+    "watch": "nodemon lib/js/src/day$NR.bs.js",
+    "test": "nodemon lib/js/__tests__/day$NR_test.bs.js"
   },
   "keywords": [
     "BuckleScript"
@@ -14,9 +15,16 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "bs-jest": "^0.2.0",
     "bs-platform": "^2.1.0",
+    "jest": "^21.2.1",
     "nodemon": "^1.13.3",
     "npm-run-all": "^4.1.2",
     "npm-watch": "^0.3.0"
+  },
+  "dependencies": {
+    "bs-fetch": "^0.2.0",
+    "bs-json": "^0.2.4",
+    "isomorphic-fetch": "^2.2.1"
   }
 }

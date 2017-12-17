@@ -1,19 +1,28 @@
-type gender =
-  | Male
-  | Female;
-
-type student = {
-  name: string,
-  age: int,
-  gender
+let captchaCheck = seq => {
+  let rec aux = (seq, head, acc) =>
+    switch seq {
+    | [] => acc
+    | [hd1, hd2, ...rest] =>
+      hd1 === hd2 ?
+        aux([hd2, ...rest], head, acc + hd1) : aux([hd2, ...rest], head, acc)
+    | [hd] => hd === head ? aux([], head, acc + hd) : aux([], head, acc)
+    };
+  aux(seq, List.hd(seq), 0);
 };
 
-let check = student =>
-  switch student.gender {
-  | Female => Js.log("Halle Frau " ++ student.name)
-  | Male => Js.log("Halle Mann " ++ student.name)
-  };
+[@bs.send] external split : (string, string) => array(string) = "";
 
-let max = {name: "Max", gender: Male, age: 33};
+let parseInput = input => {
+  let arr = split(input, "");
+  Js.log(Array.to_list(arr));
+  Js.log(arr);
+  List.map(int_of_string, Array.to_list(arr));
+};
 
-check(max);
+let processInput = input => input |> parseInput |> captchaCheck;
+
+let tests = ["1122", "1111", "1234", "91212129"];
+
+let expected = [3, 4, 0, 9];
+
+Js.log(List.map(processInput, tests));
