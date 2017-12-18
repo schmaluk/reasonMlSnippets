@@ -2,11 +2,7 @@
   "name": "test7",
   "version": "0.1.0",
   "sources": [
-    "src",
-    {
-      "dir": "__tests__",
-      "type": "dev"
-    }
+    "src"
   ],
   "package-specs": {
     "module": "commonjs",
@@ -15,7 +11,8 @@
   "suffix": ".bs.js",
   "bs-dependencies": [
     "bs-fetch",
-    "bs-json"
+    "bs-json",
+    "bs-axios"
   ],
   "bs-dev-dependencies": [
     "bs-jest"

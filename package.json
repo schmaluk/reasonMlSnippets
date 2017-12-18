@@ -4,10 +4,7 @@
   "scripts": {
     "build": "bsb -make-world",
     "start": "bsb -make-world -w",
-    "clean": "bsb -clean-world",
-    "all": "npm-run-all --parallel start watch",
-    "watch": "nodemon lib/js/src/day$NR.bs.js",
-    "test": "nodemon lib/js/__tests__/day$NR_test.bs.js"
+    "clean": "bsb -clean-world"
   },
   "keywords": [
     "BuckleScript"
@@ -23,6 +20,8 @@
     "npm-watch": "^0.3.0"
   },
   "dependencies": {
+    "axios": "^0.17.1",
+    "bs-axios": "0.0.22",
     "bs-fetch": "^0.2.0",
     "bs-json": "^0.2.4",
     "isomorphic-fetch": "^2.2.1"

@@ -1,3 +1,5 @@
+/* ReasonMl-fetch via Bucklescript */
+/* Api: http://echo.jsontest.com/key/value/one/two */
 [%%bs.raw {|require('isomorphic-fetch')|}];
 
 /* Response Type: */
