@@ -20,7 +20,7 @@ Js.Promise.then_(
   )
 );
 
-/* Better with pipes 😉 */
+/* Better with pipes */
 Js.Promise.resolve(1)
 |> Js.Promise.then_(value => Js.Promise.resolve(value + 1))
 |> Js.Promise.then_(value => Js.Promise.resolve(Js.log(value)));

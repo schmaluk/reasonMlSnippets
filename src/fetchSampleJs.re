@@ -12,27 +12,29 @@ type responseType = {
   key: string
 };
 
-let test = {"one": "einsie", "key": "schl\195\188ssli"};
-
-let converted = responseTypeFromJs(test);
-
-Js.log(converted);
-
 [%%bs.raw {|
     require('isomorphic-fetch');
 |}];
 
-/* fetch("http://echo.jsontest.com/key/value/one/two").then(r => r.text()) */
 let fetchApiResponseInline: unit => Js.Promise.t(Js.Json.t) = [%bs.raw
   {|
-    ()=>Promise.resolve({one:"dadad", key: "dsdsd"})
+    ()=>fetch("http://echo.jsontest.com/key/value/one/two").then(r => r.json())
 |}
 ];
 
-let handleResponse = data => {
-  Js.log("handleRessssponse");
-  Js.log(data);
+let handleData = (data: responseType) => {
+  Js.log("handleData");
+  Js.log(data.one);
+  Js.log(data.key);
 };
+
+/* Need to manually convert Json-data to Record-data */
+/* Unfortunately there is a difference between a Bucklescript-object and Js.json.t */
+let parseJsonData = (data: Js.Json.t) : responseType =>
+  Json.Decode.{
+    one: field("one", string, data),
+    key: field("key", string, data)
+  };
 
 /* How Promises work in reason: */
 /* https://jamesfriend.com.au/a-first-reason-react-app-for-js-developers */
@@ -40,7 +42,8 @@ let handleResponse = data => {
 /* promise
    |> Js.Promise._then(value1 => promise1)
    |> Js.Promise._then(value2 => promise2)
-   |> Js.Promise._then(value3 => Js.Promise.resolve(value3)) */
+   |> Js.Promise._then(value3 => Js.Promise.resolve(doSthgWith(value3))) */
 fetchApiResponseInline()
-|> Js.Promise.then_(data => Js.Promise.resolve(data))
-|> Js.Promise.then_(data => Js.Promise.resolve(Js.log(data)));
+|> Js.Promise.then_(data
+     /* Need to return a Promise to fullfil expected function signature in then_(...) */
+     => Js.Promise.resolve(handleData(parseJsonData(data))));
