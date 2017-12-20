@@ -1,3 +1,5 @@
+/* Javascript-Imports into Reason are done via Bucklescript  */
+/* Module for those Imports have Js-Prefix */
 /* https://bucklescript.github.io/docs/en/interop-cheatsheet.html */
 /* *
  * */
@@ -120,6 +122,8 @@ external logNochmal : string => unit = "machWas";
 
 logNochmal("YOLO");
 
+/* *** IMPORT / REQUIRE JS-Modules in Reason */
+/* *** [@bs.module "..."] */
 /* *
  * */
 /* Import Js-Module into ReasonML: */
@@ -143,4 +147,88 @@ Js.Promise.(
 value with key "key" : $key|j})
        |> resolve;
      })
+);
+
+/* Js.Promise.(
+     get("http://echo.jsontest.com/key/value/one/two")
+     |> then_(response => response##json())
+     |> then_(data => resolve(Js.log(data)))
+   ); */
+/* *
+ * */
+/* ### Fifty Shades of JS-Objects in Reason */
+/* (1) Js.Dict : Possibly Computed Keys */
+let emptyObject = Js.Dict.empty();
+
+Js.Dict.set(emptyObject, "name", "Max Meyer");
+
+Js.Dict.set(emptyObject, "age", "ss8");
+
+let age =
+  switch (Js.Dict.get(emptyObject, "age")) {
+  | Some(a) => a
+  | None => ""
+  };
+
+Js.log(age);
+
+/* #
+   # */
+/* Read-Only Fields in JS-Objects: */
+type jsObjectType = {
+  .
+  [@bs.set] "name": string,
+  [@bs.set] "age": int
+};
+
+[%%bs.raw "const johnny = {name:'Johnny'};"];
+
+[@bs.val] external johnny : jsObjectType = "johnny";
+
+Js.log("Johnny : " ++ johnny##name);
+
+/* #
+   # */
+/* Readable + Writable Fields in JS-Objects: */
+/* [@bs.set] field in jsObjectType */
+johnny##name#="Jane";
+
+johnny##age#=(johnny##age + 1);
+
+Js.log("Johnny : " ++ johnny##name);
+
+Js.log("Age : " ++ string_of_int(johnny##age));
+
+/* #
+   # */
+
+/****** Declare METHODS on JS-Objects: */
+/* [@bs.meth] */
+type jsObjectType2('a) = {. [@bs.meth] "json": unit => Js.Promise.t('a)};
+
+type responseType2 = {
+  .
+  "one": string,
+  "key": string
+};
+
+[%%raw "require('isomorphic-fetch')"];
+
+[@bs.val "fetch"]
+external fetch : string => Js.Promise.t(jsObjectType2(responseType2)) = "";
+
+Js.Promise.(
+  fetch("http://echo.jsontest.com/key/value/one/two")
+  |> then_(response => response##json())
+  |> then_(data =>
+       data
+       |> (
+         data =>
+           {
+             Js.log("self defined type -> data.one : " ++ data##one);
+             Js.log("self defined type -> data.key : " ++ data##key);
+           }
+           |> resolve
+       )
+     )
 );
