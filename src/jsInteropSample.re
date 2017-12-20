@@ -217,18 +217,13 @@ type responseType2 = {
 [@bs.val "fetch"]
 external fetch : string => Js.Promise.t(jsObjectType2(responseType2)) = "";
 
+let dataHandler = data => {
+  Js.log("self defined type -> data.one : " ++ data##one);
+  Js.log("self defined type -> data.key : " ++ data##key);
+};
+
 Js.Promise.(
   fetch("http://echo.jsontest.com/key/value/one/two")
   |> then_(response => response##json())
-  |> then_(data =>
-       data
-       |> (
-         data =>
-           {
-             Js.log("self defined type -> data.one : " ++ data##one);
-             Js.log("self defined type -> data.key : " ++ data##key);
-           }
-           |> resolve
-       )
-     )
+  |> then_(data => data |> dataHandler |> resolve)
 );
