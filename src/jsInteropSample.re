@@ -34,7 +34,7 @@ Js.log(test);
 
 /* *
  * */
-/* (4) Referenzieren eines Packages in JS : */
+/* (4) Den vernesteten Namespace eines importierten Modules verkürzen: */
 /* [@bs.scope "..."] */
 /* [@bs.val] [@bs.scope "./js/testModule"] */
 /* external  */
@@ -67,6 +67,35 @@ type recType = {
  * */
 /* Aufruf einer Methode auf einem Objekt */
 /* [@bs.send]; */
+type auto;
+
+[@bs.module] [@bs.new]
+external createAuto : string => auto = "../../../src/js/auto";
+
+/* Eine Js-Methode auf einem Js-Objekt aufrufen: bs.send */
+/* Das 1.te Argument ist dabei das Js-Objekt selbst: */
+[@bs.send] external fahreAutoNach : (auto, string) => unit = "fahren";
+
+let meineLimo: auto = createAuto("meineLimo");
+
+Js.log(meineLimo);
+
+fahreAutoNach(meineLimo, "Garage");
+
+Js.log(meineLimo);
+
+/* Vertauschen der Stelle des Js-Objekts in der Parameterliste ans Ende zum späteren Pipen: bs.send.pipe */
+/* Ermöglicht Chaining */
+/* [@bs.send.pipe : (Input-Typ der Chain/Pipe)]  */
+/* external meineFunktion : arg => (Output-Typ der Chain/Pipe) = "(Objekt-Methode auf dem Input-Typ)"; */
+[@bs.send.pipe : auto] external fahreAutoNachPiped : string => auto = "fahren";
+
+let ente =
+  createAuto("ente")
+  |> fahreAutoNachPiped("CasaNoir")
+  |> fahreAutoNachPiped("Hawaii")
+  |> fahreAutoNachPiped("Rom");
+
 /* *
  * */
 /* Übergabe von Reason-Objekten nach JS */
@@ -112,6 +141,9 @@ Js.log(wattRecord.stunden);
 /* * */
 /* * */
 /* Import Js-Module into Reason: */
+/* Angabe eines Relative Pfads ausgehend von der erzeugten JS-Datei möglich */
+/* Angabe eines Modules möglich */
+/* Angabe des Modules als Methoden-Name möglich, falls Module und Funktion übereinstimmen */
 /* The path needs to be relative to the outputted, generated JS-files  */
 /* i.e.: lib/js/src/ */
 /* Bucklescript is not a bundler. */
@@ -121,6 +153,21 @@ Js.log(wattRecord.stunden);
 external logNochmal : string => unit = "machWas";
 
 logNochmal("YOLO");
+
+[@bs.module]
+external isomorphicFetch : string => Js.Promise.t('a) = "isomorphic-fetch";
+
+let handleProductData = data => {
+  let names = data##products |> Array.map(p => p##name);
+  Js.log("Obst-Produkte aus der API:");
+  Js.log(names |> Js.Array.joinWith(", "));
+};
+
+Js.Promise.(
+  isomorphicFetch("https://api.predic8.de:443/shop/products/")
+  |> then_(response => response##json())
+  |> then_(data => data |> handleProductData |> resolve)
+);
 
 /* *** IMPORT / REQUIRE JS-Modules in Reason */
 /* *** [@bs.module "..."] */
