@@ -20,6 +20,16 @@ let brumbrum = createAuto(~marke="BrumBrum");
 Js.log(brumbrum);
 
 /*
+ * Import GLOBAL JS-variable in the scope into Reason:
+ * - [@bs.val]
+ */
+[%%raw {|const val = { secret: "ley" }|}];
+
+[@bs.val] external valley : Js.t('a) = "val";
+
+Js.log(valley##secret);
+
+/*
  Convert a Js.NULLABLE RETURN-VALUE in JS to OPTION-type in Reason
  - [@bs.return nullable]
  */
