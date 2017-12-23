@@ -4,6 +4,9 @@
 
  - Bucklescript-Cheetsheet:
   https://bucklescript.github.io/docs/en/interop-cheatsheet.html
+
+ - Converting JS into Reason:
+  https://reasonml.github.io/guide/javascript/converting
  *
  */
 type auto;
