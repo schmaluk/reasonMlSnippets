@@ -70,3 +70,58 @@ if (List.length(listenConcatenated) > 4) {
   Js.log({j|a: $a, b: $b, c: $c, d: $d|j});
   logList(rest);
 };
+
+/*
+ Arrays: [| a, b, c, ... |]
+ - konzipiert für schnellen wahlfreien Zugriff mittels Index
+ - homogener Datencontainer mit Elementen gleichen Typs
+ - mutable
+ - mapt 1:1 zu einem JS-Array, d.h. Js.Array.t('a)
+ - feste Länge
+ */
+let meinArray: array(string) = [|"a", "b", "c", "d"|];
+
+Js.log(meinArray);
+
+/*
+ *
+  Wahlfreier Zugriff über Index:
+  - array[index]
+  */
+Js.log(meinArray[2]);
+
+/*
+ *
+ Länge eines Arrays:
+ - Array.length(array)
+ */
+Js.log(Array.length(meinArray));
+
+/*
+  *
+  Mutable via Zuweisung:
+ - array[index] = newValue;
+ */
+meinArray[3] = "wurst";
+
+Js.log(meinArray);
+
+/*
+  *
+  Implzite Umwandlung eines Reason-Arrays array('a) <--> Js-Array Js.Array.t('a):
+ - ein array('a) ist nur ein Alias für ein Js.Array.t('a)
+ - kein Typecast notwendig für Reason-Arrays
+  */
+let logJsArray: Js.Array.t('a) => unit =
+  input =>
+    input |> Js.Array.joinWith(", ") |> (v => Js.log({j|logJsArray: $v|j}));
+
+/* Impliziter Typ-Cast von: array(string) --> Js.Array.t(string) */
+logJsArray(meinArray);
+
+/* Impliziter Typ-Cast von: Js.Array.t(int) --> array(int) */
+let nochnArray: array(int) = [%raw "[1,2,99,1000,-4]"];
+
+let logReasonArray: array(int) => unit = logJsArray;
+
+logReasonArray(nochnArray);
