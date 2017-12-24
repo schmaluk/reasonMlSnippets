@@ -137,3 +137,19 @@ let mapToFeller = (~feller: katze, ~pfoter: katze) : string => feller.name;
 
 /* Falls Label == Variable-Name, Funktions-Aufruf ohne explizite Zuweisung des Labeled Parameter */
 mapToFeller(~pfoter, ~feller) |> print_endline;
+
+/*
+  *
+   Funktions-Überladung ist nicht möglich in Reason:
+   Funktions-Überladung: der derselbe Funktions-Name mit anderer Signatur (Parameterliste)
+
+   Stattdessen gibts nur: Funktions-Überschreibung aka Shadowing
+ */
+let f = (x: string) => print_endline(x);
+
+f("elf");
+
+let f = (x: int) => x + 1 |> (value => Js.log({j| x + 1 : $value|j}));
+
+/* f("elf"); --> Fehler, da f geshadowed wird */
+f(11);
