@@ -9,8 +9,9 @@
 /*
  Konstruktoren:
  - werden immer !!grossgeschrieben!!
- - stellen Werte im deklarierten Datentyp dar
- - können als Container dienen und wiederum Werte anderer Datentypen enthalten
+ - stellen die Werte in einem Datentyp dar
+ - können Container sein, die wiederum Werte
+   anderer Datentypen aufnehmen können
   */
 /* Typ-Deklaration */
 type fenster =
@@ -37,7 +38,7 @@ let logDenMal: personData => unit =
     Js.log({j|$name ist $age alt und ist $height m gross.|j});
   };
 
-/* Kein Typ-Cast erforderlich, bei einem Type-Alias: */
+/* Kein Type-Cast erforderlich, bei einem Type-Alias: */
 logDenMal(mrMax);
 
 /*
@@ -94,3 +95,16 @@ let payloadResults: myPayloadResults(string) = [
   Ok({data: "bye"}),
   Error("Something wrong happened!")
 ];
+
+/* Rekursive Datentypen */
+type tree('a) =
+  | Node(tree('a))
+  | Leaf('a);
+
+/* Mutual Recursive Types */
+/* Normalerweise muss ein Typ erst deklariert sein,
+   damit man ihn verwenden kann in Reason.*/
+/* Mutually Recursive Types
+   Just like functions, types can be mutually recursive through and: */
+type student = {taughtBy: teacher}
+and teacher = {students: list(student)};
