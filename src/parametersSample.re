@@ -8,7 +8,25 @@ let test2 = (a, b) => Js.log({j|test2: $a, $b|j});
 
 test2(1, 2);
 
-/* Labeled Arguments */
+/* Labeled Arguments:
+   - Bei Labeled/Named Parametern wird das Label ein Teil der
+     Funktions-Signatur:
+   */
+let f:
+  /* Die Labels sind ein Teil der Signatur */
+  (~x: 'a, ~y: 'b) => unit =
+  /*Funktionsrumpf: Implementierung zur Signatur */
+  (~x, ~y) => Js.log({j|x: $x, y: $y|j});
+
+/* Currying ist auch möglich mit Labeled Arguments */
+let fMitX:
+  /* Signatur */
+  (~y: 'a) => unit =
+  /* Funktionsrumpf mit Impl. der Signatur */
+  f(~x="Was ist das?");
+
+fMitX(~y=0);
+
 let test3 = (a, b, ~c) => Js.log({j|test3: $a, $b, $c|j});
 
 test3(1, 2, 3);
@@ -17,85 +35,122 @@ test3(~c=3, 1, 2);
 
 test3(1, ~c=3, 2);
 
-/* Labeled Parameters können optional gemacht werden:
-   ~a=?
-   Der optionale Parameter sollte vor einem positionalem
-   Parameter stehen, um Verwirrung beim Currying zu vermeiden.
-   */
-/* !! Optionale Parameter sind vom Typ: option('a)
-    D.h. das übergebene Argument wird in einem option('a)
-    gewrapped, ist aber selbst nicht vom Typ option('a)
-   */
-let test4 = (a, b, ~c: option(string)=?) =>
-  /* Not good: Optional parameter at the end of the parameter-list */
-  switch c {
-  | None => Js.log({j|test4: $a, $b|j})
-  | Some(value) => Js.log({j|test4: $a, $b, $value|j})
-  };
-
-/* Problem ist jetzt hier: Currying
-   Dies ist eine Funktion, statt des Aufrufs selbst:
-   */
-test4(1, 2); /*  <-- Ist kein eigentlicher Fktns-Aufruf sondern Currying */
-
-(test4(1, 2))(~c="optionaler Parameter");
+/*
+ Optionale Parameter: ~a=?
+ - Labeled/Named Parameter können optional gemacht werden.
+ - Die Information, dass ein Parameter optional ist, wandert
+   (zusammen mit dem Label) in die Signatur der Funktion,
+   d.h.: ~label:option(typ)=?
+ - Optionale Parameter habe den Typ option(...)
+ - Beim Aufruf allerdings wird nicht ein Argument vom Typ
+   option(...) übergeben, sondern entweder keins (None) oder
+   der eigentliche Wert, welcher implizit in ein option verpackt
+   wird: f(~label=wert) statt f(~x=(Some wert))
+ - Will man einen Wert vom Typ option(...) als optionalen Parameter
+   als Argument übergeben, dann muss dieser vorher erst mit "?"
+   beim Aufruf markiert werden: f(~x=?(Some(wert)))
+ */
+let f:
+  /* Signatur aka Interface on function-level */
+  (~x: option('a)=?, ~y: 'b) => unit =
+  /* Signature-Implementation aka Function-Body */
+  (~x=?, ~y) =>
+    switch x {
+    | Some(wert) => Js.log({j|x: $wert, y: $y|j})
+    | None => Js.log({j|x: None, y: $y|j})
+    };
 
 /*
- Besser: Optionaler (Labeled) Parameter vor einem
- Positionalem (Ungelabeltem) Parameter
+ Problem hier: f(~y="...") wird nicht mit ~x und ~y aufgerufen
+ sondern nur mit ~y und damit gecurried.
+ D.h. der optionale Parameter ~x wird nicht mit None
+ initialisiert, sondern erst gar nicht übergeben.
  */
-let test5 = (a, ~b: option(string)=?, c) =>
-  /* b ist jetzt hier vom Typ: option('a) */
-  /* Beim Aufruf wird der rohe Wert im optionalem Parameter
-     übergeben, und im Funktionsaufruf dann in ein option('a)
-     eingepackt:
+let g:
+  /* Signatur: ~x wurde nicht gesetzt mit None */
+  (~x: 'a=?) => unit =
+  /*
+    Funktion mit optionalem Parameter wurde gecurried,
+    anstatt dieser mit None initialisiert wurde
+   */
+  f(~y={|Überraschung|});
+
+/*
+ Der optionale Parameter muss hier leider explizit gesetzt,
+ um das defaultmäßige Currying zu verhindern:
+ */
+g(~x=?None);
+
+/*
+   Die Lösung, um das default-mäßige Currying
+   eines Funktions-Aufrufs zu unterbinden
+   bei der Verwendung eines optionalen Parameters, findet sich in
+   der der Ocaml Spezi:
+   "If a non-labeled argument is passed and its corresponding
+   parameter is preceded by one or several optional parameters,
+   then these parameters are defaulted, i.e. !!! the value
+   None will be passed for them.!!!"
+ */
+let f:
+  /* Signature mit optionalem Parameter*/
+  (~x: option('a)=?, ~y: 'b, unit) => unit =
+  /* Konvention:
+     () wird oftmals als positionaler Parameter in OCaml benutzt
+     bei optionalen Parametern, um beim Funktionsaufruf zu
+     signalisieren, dass alle Argumente übergeben wurden
+     (und die optionalen Parameter mit None initialisiert werden
+     sollen) und der Aufruf !!nicht!! gecurried
+     werden soll
      */
-  switch b {
-  /* denn Optionale Parameter sind vom Typ: option('a) */
-  | None => Js.log({j|test5: a: $a, c: $c|j})
-  | Some(value) => Js.log({j|test5: a: $a, b: $value, c: $c|j})
+  (~x=?, ~y, ()) =>
+    switch x {
+    | Some(wert) => Js.log({j|x: $wert, y: $y|j})
+    | None => Js.log({j|x: None, y: $y|j})
+    };
+
+/* Erstmal hier der Aufruf mit Currying: */
+let g:
+  /* Signatur mir optionalem Parameter */
+  (~x: option('a)=?, unit) => unit =
+  /* Funktions-Rumpf d.h. Signatur-Implementierung */
+  f(~y="Schon wieder Curry auf Aufruf.");
+
+g(~x=?None, ()); /* Aufruf ohne Curry */
+
+/* Jetzt signalisiert hier der positionale Parameter () beim
+   Aufruf, dass beim Aufruf das ganze Gericht
+   und zwar ohne Curry serviert werden soll: */
+f(~y="Yooo. Heute mal kein scharfes Curry auf den Aufruf.", ());
+
+/* Achtung!!
+   Optionale Parameter sind in der Parameterliste
+   vom Typ: (~label:option(typ)=?)=>...
+   und deswegen kommt das übergebene optionale Argument
+   auch im Funktionsrumpf als Variable "label" vom Typ
+   option('a) an und muss also mittels Pattern-Matching
+   erst ausgepackt werden:
+   */
+let optionalToString = optional =>
+  switch optional {
+  | Some(x) => "Some: " ++ x
+  | None => "None"
   };
 
-/* b ist im Funktionsrumpf: None */
-test5(1, 3);
+let f:
+  /* Signatur mit positionalem Parameter am Ende */
+  (~optional1: string=?, ~optional2: string=?, 'a) => unit =
+  /* Implementierung */
+  (~optional1=?, ~optional2=?, mandatory) => {
+    let optional1 = optionalToString(optional1);
+    let optional2 = optionalToString(optional2);
+    Js.log(
+      {j|optional1: $optional1, optional2: $optional2, mandatory: $mandatory|j}
+    );
+  };
 
-/* Anhand des darauffolgenden Positionalem Parameter vor
-   dem Optionalem (Labeled) Parameter erkennt Reason den
-   eigentlichen Fktns-Aufruf */
-test5(~b="wurst schmeckt", 1, 3); /* Das Argument wird eingepackt in ein option(string) */
+/* Kein Currying, da positionaler Parameter am Ende */
+f("hallo"); /* Ouput: optional1: None, optional2: None, mandatory: hallo */
 
-/*
-  *
-  !! Regel: Merke Optionale (Labeled) Parameter niemals am Ende
-         der Parameterliste anordnen wg. Currying
- *
- */
-/*
- Übergabe eines options('a)-Value an den Optionalen Parameter beim Fktns.Aufruf:
- f(~x=?option)
-
- let f = (~x=?) => { ... (x ist vom Typ options('a) im Rumpf) };
- let nullableValue = Some wert;
- f(~x=?nullableValue)
- beim Funktionsaufruf verwenden mittels:
- ?optionsArg beim Funktions-Aufruf mit optionsArg vom Typ option('a)
-
- */
-let nullable = Some("Ich existiere");
-
-test5(1, 3, ~b=?nullable); /* arg ist vom Typ: option(string) statt string */
-
-let nullable = None;
-
-test5(1, 3, ~b=?nullable);
-
-/*
- f(~x=?arg);
- optionsArg ist hier vom Typ: option(string) statt string
- und wird hier per ?optionsArg beim Funktionsaufruf in den
- Funktionsrumpf durchgereicht
- (ohne nochmals in ein option('a) gewrappt werden zu müssen)
- */
 /*
  *
  Parameter mit Default-Value: Labeled Parameter
@@ -110,9 +165,11 @@ let times = (n, f) => {
 };
 
 let test6 = (~spruch: string="Oben ist oben", repCount: int) =>
-  /* Da das Argument dann immer vorhanden sein wird durch den Fallback zum default-Wert,
-     wird hier der optionale Parameter auch nicht options('a) eingepackt
-        */
+  /* Da das Argument bei einem Parameter mit Default-Wert
+      immer vorhanden sein wird durch den Fallback
+      zum default-Wert, wird hier der optionale Parameter
+      auch nicht ein options('a) eingepackt
+     */
   times(repCount, () => print_endline(spruch));
 
 test6(10);

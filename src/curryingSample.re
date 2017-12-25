@@ -11,6 +11,24 @@ f("hallo", "wie", "gehts");
  - let f = x => y => z => Js.log({j|x: $x y: $y z: $z|j});
  */
 /*
+  *
+ Currying mit Labelled/Named Parametern:
+ */
+let f:
+  /* Signatur: */
+  (~x: string, ~y: string, ~z: string) => unit =
+  /* Implementierung im Funktions-Rumpf: */
+  (~x, ~y, ~z) => {
+    print_endline("x: " ++ x);
+    print_endline("y: " ++ y);
+    print_endline("z: " ++ z);
+  };
+
+let g: (~x: string, ~y: string) => unit = f(~z="z");
+
+g(~y="y", ~x="x");
+
+/*
  Anwendungsfälle für Currying:
  - Dependency Injection:
  */
