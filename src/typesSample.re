@@ -7,11 +7,12 @@
  - Konstruktoren sind dabei die Werte innerhalb dieser Menge (aka Datentyp)
  */
 /*
- Konstruktoren:
+ Konstruktoren in Varianten:
  - werden immer !!grossgeschrieben!!
  - stellen die Werte in einem Datentyp dar
  - können Container sein, die wiederum Werte
    anderer Datentypen aufnehmen können
+ - Varianten müssen einen Konstruktor haben
   */
 /* Typ-Deklaration */
 type fenster =
