@@ -8,7 +8,12 @@
  https://en.wikipedia.org/wiki/Nominal_type_system
  */
 /*
- *
+ Ziel von Destructuring:
+ Extraktion von Daten aus Datenstrukturen wie z.B.
+ Lists, Records, Tupels, Variants
+ */
+/* Beispiel: Destructuring eines Nested Records  */
+/*
  Type-Declaration of a nested record
  */
 type nestedJunk = {
@@ -57,3 +62,18 @@ payload p2: $p2
 payload p3: $p3
     |j}
 );
+
+/* Destructuring of function arguments in the
+      parameter list of a function declaration:
+      f(arg as pattern)
+   */
+type person = {
+  name: string,
+  age: int
+};
+
+let someFunction = (~person as {name}) => {/* you can use `name` here */};
+
+let otherFunction = (~person as {name} as thePerson) => {
+  /* you can use both `name` and the whole record as `thePerson` here */
+};
