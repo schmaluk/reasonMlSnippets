@@ -40,7 +40,8 @@ wo |> reiseEtappe |> string_of_int |> print_endline;
  (2) Destructuring Variants containing values
  */
 type people =
-  /* Variants as Containers */
+  /* Variants using Constructors as Data Containers
+     (Tuple-like-style, order is important) */
   | School(int, string, string)
   | University(int, string, string)
   | Worker(int, string, string, string);
@@ -59,7 +60,11 @@ let generatePeople = list => {
   switch age {
   /* Prepend new element to list: */
   /* cases using guards "when" */
-  | age when age < 18 => [School(age, name, city), ...list]
+  | age when age < 18 =>
+    /* Reason's prepend operation via JS-like destructuring:
+          [head, ...list]
+       */
+    [School(age, name, city), ...list]
   | age when age < 30 => [University(age, name, city), ...list]
   | age when age < 80 => [Worker(age, name, city, findCompanyName()), ...list]
   };
@@ -71,6 +76,7 @@ let logPeople:
   /* Implementation */
   ppl =>
     ppl
+    /* Function Currying of List.iter into: List.iter(f) */
     |> List.iter(p
          /* Pattern Matching */
          =>
@@ -108,14 +114,28 @@ let isServerError = code => code >= 500;
 
 let message =
   switch data {
-  | GoodResult(theMessage) => "gut"
-  /* Guard "when": Prüfung des Falls auf eine Bedingung */
-  | BadResult(errorCode) when isServerError(errorCode) => "schlecht"
-  | BadResult(errorCode) => "keine Ahnung"
+  | GoodResult(_theMessage) => "gut"
+  /* Guard "when": Prüfung des Falls auf eine Bedingung: */
+  /* !! Erst Destructuring, um den enthaltenen Wert zu extrahieren */
+  | BadResult(errorCode)
+      /* !! dann den Wert prüfen mittels eines Guards */
+      when isServerError(errorCode) => "schlecht"
+  | BadResult(_errorCode) => "keine Ahnung"
   | NoResult => "kein Ergebnis"
   };
 
 Js.log({j|message: $message|j});
+
 /*
  * Exceptions und Pattern Matching
- */
+ Match on Exceptions: | exception x => ...
+ If a function throws an exception (covered later), you can also match on that, in addition to the function's normally returned values.
+  */
+let myItems = ["item1", "item2", "item3"];
+
+let theItem = "wasser";
+
+switch (List.find(i => i === theItem, myItems)) {
+| item => print_endline(item)
+| exception Not_found => print_endline("No such item found!")
+};

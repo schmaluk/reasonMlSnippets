@@ -125,3 +125,50 @@ let nochnArray: array(int) = [%raw "[1,2,99,1000,-4]"];
 let logReasonArray: array(int) => unit = logJsArray;
 
 logReasonArray(nochnArray);
+
+/* Records */
+/* Punning
+      - "Punning" refers to the syntax shorthand for when a label and a value are the same.
+      For example, in JavaScript, instead of doing return {name: name},
+      you can do return {name}.
+   */
+type werwolf = {
+  haare: string,
+  geruch: string
+};
+
+let haare = {|überall|};
+
+let geruch = "streng";
+
+/* Punning: Variablen-Name stimmt überein mit dem Label/Field-Namen */
+let meAlsWerwolf = {haare, geruch};
+
+/* Deklaration eines Records */
+type meinRecordType('a) = {
+  /* Some immutable fields */
+  field1: int,
+  field2: string,
+  /* Mutable field */
+  mutable field3: bool,
+  /* Generic Record */
+  field4: 'a
+};
+
+/*
+ Erzeugung eines Record-Objekts:
+ - alle Felder müssen initialisiert werden
+ */
+let meinRecordObject: meinRecordType('a) = {
+  field1: 1,
+  field2: "zwei",
+  field3: false,
+  field4: Js.Date.now()
+};
+
+Js.log(meinRecordObject);
+
+/* Zuweisung eines mutable fields */
+meinRecordObject.field3 = true;
+
+Js.log(meinRecordObject);

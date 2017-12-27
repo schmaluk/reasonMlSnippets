@@ -1,0 +1,1 @@
+{"dependencies":[{"name":"./js/src/index.bs.js","dynamic":true}],"generated":{"html":"<html>\n\n<head>\n    <title>Test Reason App</title>\n</head>\n\n<body>\n    <div id=\"root\"></div>\n    <script src=\"/dist/b610841e16f49d404f2b40b968aaa771.js\"></script>\n</body>\n\n</html>"},"hash":"30107f0316fdc9a9916c0a93a2796493"}
