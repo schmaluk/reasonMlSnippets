@@ -91,3 +91,12 @@ let cases = ["a", "b", "c", "d"];
 cases |> List.map(tryFehlerCode);
 
 cases |> List.map(check_f);
+/*
+ Summary:
+ - Use try(expression) { MyException(...) => ... },
+   if you want to just handle the exception but not want to
+   map the non-exception-expression to another value
+ - Use switch(expression) { exception MyException(...) => ... },
+   if you want to map the non-exception-expression to another
+   value anyway
+ */
