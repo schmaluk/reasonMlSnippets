@@ -27,6 +27,7 @@ module Zoo = {
     f => animals^ |> Hashtbl.iter((name, species) => f({name, species}));
   let zooName = "Zur Schlangengrube";
   let description = "Kaninchen Stall mit angeschlossenem Terrarium";
+  let privateStuff = [|"private", "keep", "out"|];
 };
 
 /* Add some animals to the zoo */
@@ -47,6 +48,7 @@ Zoo.visitAnimals(({name, species}) =>
 
 /*
   ## Importieren:
+  - werden großgeschrieben
   - Module werden über ihren Modul-Namen referenziert.
   - Ein Modul kann auch nur für eine Expressions referenziert
   werden: MyModule.(....)
@@ -60,5 +62,62 @@ Zoo.(Js.log({j|ZooName: $zooName und Description: $description|j}));
 open Zoo;
 
 Js.log({j|ZooName: $zooName und Description: $description|j});
-/* Signatur eines Modules: Module-Interface */
-/* https://reasonml.github.io/guide/language/module/ */
+
+/*
+  Signatur eines Modules: Module-Interface
+  - werden großgeschrieben
+  - https://reasonml.github.io/guide/language/module/
+  - Put the signature definitions of a module file
+  in a corresponding *.rei-file
+  - Alternatively you can define the module interface via:
+  module type EstablishmentType = {
+   type profession;
+   let getProfession: profession => string;
+ };
+  */
+module type TransportMittel = {let name: string; let preis: float;};
+
+module Auto: TransportMittel = {
+  /* Über die Modul-Signatur veröffentlicht */
+  let name = "auto";
+  let preis = 14000.99;
+  /* Nicht veröffentlicht über die Modul-Signatur: */
+  let automarke = "BrummBrumm Unlimited";
+};
+
+module Kutsche: TransportMittel = {
+  /* Über die Modul-Signatur veröffentlicht */
+  let name = "kutsche";
+  let preis = 900.77;
+  /* Nicht veröffentlicht über die Modul-Signatur: */
+  let pferdName = "Mr.Ed";
+};
+
+let name = Auto.name;
+
+let preis = Auto.preis;
+/* Nicht veröffentlicht über das Module-Interface: */
+/* Daher auch nicht zugänglich */
+/* let automarke = Auto.automarke; */
+/*
+ *
+  Bemerkungen:
+  Every .rei file is a signature
+     Similar to how a react.re file implicitly defines
+     a module React, a file react.rei implicitly defines
+     a signature for React.
+     If react.rei isn't provided, the signature of
+     react.re defaults to exposing all the fields
+     of the module. Because they don't contain
+     implementation files, .rei files are used
+     in the ecosystem to also document the public
+     API of their corresponding modules. */
+/*
+  file react.re (implementation. Compiles to module React):
+    type state = int;
+    let render = (str) => str;
+ */
+/* file react.rei (interface. Compiles to signature of module React):
+       type state = int;
+       let render: str => str;
+   */
