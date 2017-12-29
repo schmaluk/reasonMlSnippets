@@ -19,3 +19,7 @@
 - `npm run parcel` for starting parcel-web-dev-server
 - Local dev webserver starts at localhost:1234
 
+## (3) Use create-react-app
+- `sudo create-react-app <app-name> --scripts-version reason-scripts`
+- `npm run start`
+- Will start local dev webserver at localhost:3000
