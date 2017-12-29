@@ -14,10 +14,14 @@
  */
 /* Beispiel: Destructuring eines Nested Records  */
 /*
- Type-Declaration of a nested record
+ Type-Declaration of a nested record.
+ !! Due to joining the type-declarations with "and" you
+ can mix the order arbitrarily...
  */
 type nestedJunk = {
   payload: string,
+  /* use the type declaration of junkLevel1 before
+     it is defined due to "and"-joins */
   junkLevel1
 }
 and junkLevel1 = {

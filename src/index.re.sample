@@ -1,1 +1,1 @@
-ReactDOMRe.renderToElementWithId(<JsxComponent2 />, "root");
+ReactDOMRe.renderToElementWithId(<Root />, "root");

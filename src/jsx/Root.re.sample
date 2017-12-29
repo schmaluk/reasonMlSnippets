@@ -15,4 +15,4 @@
    */
 let component = ReasonReact.statelessComponent("TodoApp");
 
-let make = children => {...component, render: self => <JsxComponent1 />};
+let make = children => {...component, render: self => <Items />};
