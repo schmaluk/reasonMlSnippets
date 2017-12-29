@@ -178,7 +178,12 @@ test6(~spruch="Atmen ist gesund", 2);
 
 /*
  *
- Syntactic Sugar für Funktions-Aufrufe
+ Syntactic Sugar für Funktions-Aufrufe: Punning
+ - Punning (engl. für Wortspiel) bedeutet:
+ Der Variablen-Name stimmt mit dem Parametername einer
+ eines Labeled-Parameters bei einer Funktion überein,
+ und muss deswegen nicht nochmal explizit wiederholt
+ werden.
  */
 type katze = {
   name: string,
@@ -192,6 +197,17 @@ let pfoter = {name: "Moritz", alter: 2, specialAttack: () => "miauen"};
 
 let mapToFeller = (~feller: katze, ~pfoter: katze) : string => feller.name;
 
+/*
+ Beispiel für Punning:
+ - mapToFeller hat 2 gelabelte Parameter:
+ feller & pfoter
+ - Es werden die gleichnamigen Variablen
+ feller & pfoter an die Funktion übergeben
+ - Da es in Reason Punning gibt für gelabelte
+ Parameter, muss man nicht schreiben:
+ f(~arg1=arg1, ~arg2=arg2, etc.) sondern kann verkürzen auf:
+ f(~arg1, ~arg2, etc.)
+ */
 /* Falls Label == Variable-Name, Funktions-Aufruf ohne explizite Zuweisung des Labeled Parameter */
 mapToFeller(~pfoter, ~feller) |> print_endline;
 
