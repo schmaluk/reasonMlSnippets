@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "sources": [
     {
-      "dir": "src",
-      "subdirs": true
+      "dir": "src"
+      // ,"subdirs": true
     }
   ],
   "package-specs": {
@@ -15,15 +15,15 @@
   "bs-dependencies": [
     "bs-fetch",
     "bs-json",
-    "bs-axios",
-    "reason-react"
+    "bs-axios"
+    //, "reason-react"
   ],
   "bs-dev-dependencies": [
     "bs-jest"
   ],
   "namespace": true,
-  "refmt": 3,
-  "reason": {
-    "react-jsx": 2
-  }
+  "refmt": 3
+  //, "reason": {
+  //   "react-jsx": 2
+  // }
 }

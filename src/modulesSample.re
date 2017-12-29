@@ -78,19 +78,19 @@ Js.log({j|ZooName: $zooName und Description: $description|j});
 module type TransportMittel = {let name: string; let preis: float;};
 
 module Auto: TransportMittel = {
-  /* Über die Modul-Signatur veröffentlicht */
-  let name = "auto";
-  let preis = 14000.99;
   /* Nicht veröffentlicht über die Modul-Signatur: */
   let automarke = "BrummBrumm Unlimited";
+  /* Über die Modul-Signatur veröffentlicht */
+  let name = "auto von " ++ automarke;
+  let preis = 14000.99;
 };
 
 module Kutsche: TransportMittel = {
-  /* Über die Modul-Signatur veröffentlicht */
-  let name = "kutsche";
-  let preis = 900.77;
   /* Nicht veröffentlicht über die Modul-Signatur: */
   let pferdName = "Mr.Ed";
+  /* Über die Modul-Signatur veröffentlicht */
+  let preis = 900.77;
+  let name = {j|"kutsche mit $pferdName"|j};
 };
 
 let name = Auto.name;
