@@ -1,4 +1,1 @@
-ReactDOMRe.renderToElementWithId(
-  <div> (ReasonReact.stringToElement("message")) </div>,
-  "root"
-);
+ReactDOMRe.renderToElementWithId(<Root />, "root");
