@@ -57,12 +57,24 @@ function make() {
                       className: "table table-light table-striped table-bordered table-hover"
                     }, React.createElement("thead", {
                           className: "thead-dark"
-                        }, React.createElement("tr", undefined, React.createElement("th", undefined, "Item"), React.createElement("th", undefined, "Status"), React.createElement("th", undefined, "Action"))), React.createElement("tbody", undefined, $$Array.map((function (item) {
+                        }, React.createElement("tr", undefined, React.createElement("th", undefined, "Item"), React.createElement("th", undefined, "Status"), React.createElement("th", undefined, "Actions"))), React.createElement("tbody", undefined, $$Array.map((function (item) {
                                 return React.createElement("tr", {
                                             key: Pervasives.string_of_int(item[/* id */0])
                                           }, React.createElement("td", undefined, item[/* itemName */1]), React.createElement("td", undefined, printItemStatus(item[/* itemStatus */2])), React.createElement("td", undefined, React.createElement("button", {
-                                                    className: "btn btn-primary"
-                                                  }, "Close")));
+                                                    className: "btn btn-success mr-4",
+                                                    onClick: Curry._1(self[/* reduce */1], (function () {
+                                                            return /* CloseItem */Block.__(2, [item[/* id */0]]);
+                                                          }))
+                                                  }, React.createElement("i", {
+                                                        className: "fa fa-check-square pr-2"
+                                                      }), "Check"), React.createElement("button", {
+                                                    className: "btn btn-danger",
+                                                    onClick: Curry._1(self[/* reduce */1], (function () {
+                                                            return /* DeleteItem */Block.__(1, [item[/* id */0]]);
+                                                          }))
+                                                  }, React.createElement("i", {
+                                                        className: "fa fa-trash pr-2"
+                                                      }), "Delete")));
                               }), $$Array.of_list(self[/* state */2][/* todolist */1])))));
     });
   newrecord[/* initialState */10] = (function () {
@@ -119,7 +131,7 @@ function make() {
               return /* Update */Block.__(0, [/* record */[
                           /* idCounter */state[/* idCounter */0],
                           /* todolist */List.filter((function (item) {
-                                    return +(item[/* id */0] === id);
+                                    return +(item[/* id */0] !== id);
                                   }))(state[/* todolist */1]),
                           /* newItem */state[/* newItem */2]
                         ]]);

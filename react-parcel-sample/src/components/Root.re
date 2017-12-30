@@ -57,7 +57,7 @@ let make = _children => {
       let {todolist, newItem} = state;
       ReasonReact.Update({
         ...state,
-        todolist: List.filter(item => item.id == id, todolist)
+        todolist: List.filter(item => item.id != id, todolist)
       });
     | AddNewItem =>
       Js.log("AddNewItem");
@@ -111,7 +111,7 @@ let make = _children => {
           <tr>
             <th> (str("Item")) </th>
             <th> (str("Status")) </th>
-            <th> (str("Action")) </th>
+            <th> (str("Actions")) </th>
           </tr>
         </thead>
         <tbody>
@@ -122,8 +122,17 @@ let make = _children => {
                    <td> (str(item.itemName)) </td>
                    <td> (item.itemStatus |> printItemStatus |> str) </td>
                    <td>
-                     <button className="btn btn-primary">
-                       (str("Close"))
+                     <button
+                       className="btn btn-success mr-4"
+                       onClick=(self.reduce(e => CloseItem(item.id)))>
+                       <i className="fa fa-check-square pr-2" />
+                       (str("Check"))
+                     </button>
+                     <button
+                       className="btn btn-danger"
+                       onClick=(self.reduce(e => DeleteItem(item.id)))>
+                       <i className="fa fa-trash pr-2" />
+                       (str("Delete"))
                      </button>
                    </td>
                  </tr>
