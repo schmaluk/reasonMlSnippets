@@ -5,28 +5,51 @@ var List       = require("bs-platform/lib/js/list.js");
 var Block      = require("bs-platform/lib/js/block.js");
 var Pervasives = require("bs-platform/lib/js/pervasives.js");
 
+var initialNewItem = /* record */[
+  /* id */0,
+  /* itemName */"",
+  /* itemStatus : Open */0
+];
+
+var initialState = /* record */[
+  /* idCounter */0,
+  /* todolist : [] */0,
+  /* newItem */initialNewItem,
+  /* modalVisible : false */0
+];
+
 function rootReducer(action, state) {
   if (typeof action === "number") {
-    console.log("AddNewItem");
-    var newId = state[/* idCounter */0] + 1 | 0;
-    var newItem_001 = /* itemName */state[/* newItem */2][/* itemName */1];
-    var newItem = /* record */[
-      /* id */newId,
-      newItem_001,
-      /* itemStatus : Open */0
-    ];
-    return /* Update */Block.__(0, [/* record */[
-                /* idCounter */newId,
-                /* todolist : :: */[
-                  newItem,
-                  state[/* todolist */1]
-                ],
-                /* newItem : record */[
-                  /* id */newId,
-                  /* itemName */"",
-                  /* itemStatus : Open */0
-                ]
-              ]]);
+    if (action) {
+      return /* Update */Block.__(0, [/* record */[
+                  /* idCounter */state[/* idCounter */0],
+                  /* todolist */state[/* todolist */1],
+                  /* newItem */state[/* newItem */2],
+                  /* modalVisible : false */0
+                ]]);
+    } else {
+      console.log("AddNewItem");
+      var newId = state[/* idCounter */0] + 1 | 0;
+      var newItem_001 = /* itemName */state[/* newItem */2][/* itemName */1];
+      var newItem = /* record */[
+        /* id */newId,
+        newItem_001,
+        /* itemStatus : Open */0
+      ];
+      return /* Update */Block.__(0, [/* record */[
+                  /* idCounter */newId,
+                  /* todolist : :: */[
+                    newItem,
+                    state[/* todolist */1]
+                  ],
+                  /* newItem : record */[
+                    /* id */newId,
+                    /* itemName */"",
+                    /* itemStatus : Open */0
+                  ],
+                  /* modalVisible */state[/* modalVisible */3]
+                ]]);
+    }
   } else {
     switch (action.tag | 0) {
       case 0 : 
@@ -40,7 +63,8 @@ function rootReducer(action, state) {
                         /* id */newItem$1[/* id */0],
                         /* itemName */itemName,
                         /* itemStatus */newItem$1[/* itemStatus */2]
-                      ]
+                      ],
+                      /* modalVisible */state[/* modalVisible */3]
                     ]]);
       case 1 : 
           var id = action[0];
@@ -50,7 +74,8 @@ function rootReducer(action, state) {
                       /* todolist */List.filter((function (item) {
                                 return +(item[/* id */0] !== id);
                               }))(state[/* todolist */1]),
-                      /* newItem */state[/* newItem */2]
+                      /* newItem */state[/* newItem */2],
+                      /* modalVisible */state[/* modalVisible */3]
                     ]]);
       case 2 : 
           var id$1 = action[0];
@@ -70,19 +95,22 @@ function rootReducer(action, state) {
           return /* Update */Block.__(0, [/* record */[
                       /* idCounter */state[/* idCounter */0],
                       /* todolist */todolist,
-                      /* newItem */state[/* newItem */2]
+                      /* newItem */state[/* newItem */2],
+                      /* modalVisible */state[/* modalVisible */3]
+                    ]]);
+      case 3 : 
+          return /* Update */Block.__(0, [/* record */[
+                      /* idCounter */state[/* idCounter */0],
+                      /* todolist */state[/* todolist */1],
+                      /* newItem */state[/* newItem */2],
+                      /* modalVisible : true */1
                     ]]);
       
     }
   }
 }
 
-var initialState = /* record */[
-  /* id */0,
-  /* itemName */"",
-  /* itemStatus : Open */0
-];
-
-exports.initialState = initialState;
-exports.rootReducer  = rootReducer;
+exports.initialNewItem = initialNewItem;
+exports.initialState   = initialState;
+exports.rootReducer    = rootReducer;
 /* No side effect */

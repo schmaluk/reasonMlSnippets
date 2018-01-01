@@ -7,6 +7,7 @@ var Curry                         = require("bs-platform/lib/js/curry.js");
 var React                         = require("react");
 var Pervasives                    = require("bs-platform/lib/js/pervasives.js");
 var ReasonReact                   = require("reason-react/lib/js/src/ReasonReact.js");
+var Modal$ReactParcelSample       = require("./components/Modal.bs.js");
 var Utils$ReactParcelSample       = require("../../utils.bs.js");
 var TodoInput$ReactParcelSample   = require("./components/TodoInput.bs.js");
 var RootHeader$ReactParcelSample  = require("./components/RootHeader.bs.js");
@@ -26,8 +27,12 @@ var component = ReasonReact.reducerComponent("Root");
 function make() {
   var newrecord = component.slice();
   newrecord[/* render */9] = (function (self) {
+      console.log(self[/* state */2][/* modalVisible */3]);
       return React.createElement("div", {
-                  className: "container"
+                  className: "container",
+                  style: {
+                    height: "100vh"
+                  }
                 }, ReasonReact.element(/* None */0, /* None */0, RootHeader$ReactParcelSample.make(/* array */[])), React.createElement("div", {
                       className: "row"
                     }, React.createElement("div", {
@@ -41,21 +46,24 @@ function make() {
                     }, React.createElement("thead", {
                           className: "thead-dark"
                         }, React.createElement("tr", undefined, React.createElement("th", undefined, Utils$ReactParcelSample.str("Item")), React.createElement("th", undefined, Utils$ReactParcelSample.str("Status")), React.createElement("th", undefined, Utils$ReactParcelSample.str("Actions")))), React.createElement("tbody", undefined, $$Array.map((function (item) {
-                                return React.createElement("tr", {
-                                            key: Pervasives.string_of_int(item[/* id */0])
+                                return React.cloneElement(React.createElement("tr", {
+                                                key: Pervasives.string_of_int(item[/* id */0]),
+                                                onClick: Curry._1(self[/* reduce */1], (function () {
+                                                        console.log("huhu");
+                                                        return /* OpenModal */Block.__(3, [item]);
+                                                      }))
+                                              }), {
+                                            "data-toggle": "modal",
+                                            "data-target": "#exampleModal"
                                           }, React.createElement("td", undefined, Utils$ReactParcelSample.str(item[/* itemName */1])), React.createElement("td", undefined, Utils$ReactParcelSample.str(printItemStatus(item[/* itemStatus */2]))), React.createElement("td", undefined, ReasonReact.element(/* None */0, /* None */0, TodoButton$ReactParcelSample.make(/* Some */["check-square"], /* Some */["btn btn-success mr-4"], "Check", Curry._1(self[/* reduce */1], (function () {
                                                               return /* CloseItem */Block.__(2, [item[/* id */0]]);
                                                             })), /* array */[])), ReasonReact.element(/* None */0, /* None */0, TodoButton$ReactParcelSample.make(/* Some */["trash"], /* Some */["btn btn-danger"], "Delete", Curry._1(self[/* reduce */1], (function () {
                                                               return /* DeleteItem */Block.__(1, [item[/* id */0]]);
                                                             })), /* array */[]))));
-                              }), $$Array.of_list(self[/* state */2][/* todolist */1])))));
+                              }), $$Array.of_list(self[/* state */2][/* todolist */1])))), ReasonReact.element(/* None */0, /* None */0, Modal$ReactParcelSample.make(/* Some */[self[/* state */2][/* modalVisible */3]], /* array */[])));
     });
   newrecord[/* initialState */10] = (function () {
-      return /* record */[
-              /* idCounter */0,
-              /* todolist : [] */0,
-              /* newItem */RootReducer$ReactParcelSample.initialState
-            ];
+      return RootReducer$ReactParcelSample.initialState;
     });
   newrecord[/* reducer */12] = RootReducer$ReactParcelSample.rootReducer;
   return newrecord;

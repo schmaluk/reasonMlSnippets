@@ -13,7 +13,8 @@ type todoListItem = {
 type state = {
   idCounter: int,
   todolist: list(todoListItem),
-  newItem: todoListItem
+  newItem: todoListItem,
+  modalVisible: bool
 };
 
 /* actions */
@@ -21,9 +22,18 @@ type actions =
   | UpdateNewItem(string)
   | DeleteItem(int)
   | AddNewItem
-  | CloseItem(int);
+  | CloseItem(int)
+  | OpenModal(todoListItem)
+  | CloseModal;
 
-let initialState: todoListItem = {id: 0, itemName: "", itemStatus: Open};
+let initialNewItem: todoListItem = {id: 0, itemName: "", itemStatus: Open};
+
+let initialState = {
+  idCounter: 0,
+  todolist: [],
+  newItem: initialNewItem,
+  modalVisible: false
+};
 
 let rootReducer = (action, state) =>
   switch action {
@@ -52,7 +62,7 @@ let rootReducer = (action, state) =>
     ReasonReact.Update({
       ...state,
       newItem: {
-        ...initialState,
+        ...initialNewItem,
         id: newId
       },
       idCounter: newId,
@@ -67,5 +77,7 @@ let rootReducer = (action, state) =>
         todolist
       );
     ReasonReact.Update({...state, todolist});
+  | OpenModal(_item) => ReasonReact.Update({...state, modalVisible: true})
+  | CloseModal => ReasonReact.Update({...state, modalVisible: false})
   | _ => ReasonReact.NoUpdate
   };
