@@ -14,14 +14,16 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "bs-material-ui": "^0.1.16",
-    "material-ui": "^1.0.0-beta.19",
+    "bs-batteries": "0.0.14",
+    "material-ui": "^1.0.0-beta.26",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "reason-react": ">=0.3.0"
   },
   "devDependencies": {
     "bs-platform": "^2.1.0",
+    "css-loader": "^0.28.8",
+    "style-loader": "^0.19.1",
     "webpack": "^3.8.1"
   }
 }

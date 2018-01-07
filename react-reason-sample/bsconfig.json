@@ -8,7 +8,10 @@
     "react-jsx": 2
   },
   "sources": [
-    "src"
+    {
+      "dir": "src",
+      "subdirs": true
+    }
   ],
   "package-specs": [
     {
@@ -19,10 +22,12 @@
   "suffix": ".bs.js",
   "namespace": true,
   "bs-dependencies": [
-    "reason-react"
+    "reason-react",
+    "bs-batteries"
+    // ,"bs-material-ui"
   ],
-  "bs-dev-dependencies": [
-    "bs-material-ui"
-  ],
+  // "bs-dev-dependencies": [
+  //   "bs-material-ui"
+  // ],
   "refmt": 3
 }
