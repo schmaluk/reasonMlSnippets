@@ -43,6 +43,7 @@ let make = (~message, _children) => {
         <IconButton color="contrast" ariaLabel="Menu">
           (ReasonReact.stringToElement("face"))
         </IconButton>
+        <Button raised=true> (ReasonReact.stringToElement("Click")) </Button>
       </Toolbar>
     </AppBar>
 };

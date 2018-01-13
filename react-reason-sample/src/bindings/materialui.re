@@ -39,7 +39,10 @@ module Button = {
     ReasonReact.wrapJsForReason(
       ~reactClass=buttonClass,
       ~props={
-        "raised": Js.Nullable.from_opt(raised),
+        "raised":
+          Js.Nullable.from_opt(
+            Js.Option.map([@bs] (x => Js.Boolean.to_js_boolean(x)), raised)
+          ),
         "color": Js.Nullable.from_opt(color),
         "className": Js.Nullable.from_opt(className),
         "dense": Js.Nullable.from_opt(dense)
@@ -82,6 +85,63 @@ module Toolbar = {
     ReasonReact.wrapJsForReason(
       ~reactClass=tbClass,
       ~props={"className": Js.Nullable.from_opt(className)},
+      children
+    );
+};
+
+module Table = {
+  [@bs.module "material-ui"]
+  external tableClass : ReasonReact.reactClass = "Table";
+  let make = (~classes=?, children) =>
+    ReasonReact.wrapJsForReason(
+      ~reactClass=tableClass,
+      ~props={"classes": classes},
+      children
+    );
+};
+
+module TableBody = {
+  [@bs.module "material-ui"]
+  external tableClass : ReasonReact.reactClass = "TableBody";
+  let make = (~classes=?, children) =>
+    ReasonReact.wrapJsForReason(
+      ~reactClass=tableClass,
+      ~props={"classes": classes},
+      children
+    );
+};
+
+module TableCell = {
+  type padding =
+    | Default
+    | Checkbox
+    | Dense
+    | None;
+  let paddingToString: option(padding) => option(string) =
+    padding =>
+      switch padding {
+      | Some(Default) => Some("default")
+      | Some(Checkbox) => Some("checkbox")
+      | Some(Dense) => Some("dense")
+      | None => None
+      | Some(None) => Some("none")
+      };
+  [@bs.module "material-ui"]
+  external tableClass : ReasonReact.reactClass = "TableCell";
+  let make =
+      (
+        ~numeric: option(bool)=?,
+        ~padding: option(padding)=?,
+        ~classes=?,
+        children
+      ) =>
+    ReasonReact.wrapJsForReason(
+      ~reactClass=tableClass,
+      ~props={
+        "classes": classes,
+        "numeric": Js.Nullable.from_opt(numeric),
+        "padding": Js.Nullable.from_opt(paddingToString(padding))
+      },
       children
     );
 };

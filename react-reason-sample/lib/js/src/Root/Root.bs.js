@@ -17,7 +17,10 @@ function handleClick(_, _$1) {
 function make(_, _$1) {
   var newrecord = component.slice();
   newrecord[/* render */9] = (function () {
-      return ReasonReact.element(/* None */0, /* None */0, Materialui$ReactTemplate.AppBar[/* make */1](/* None */0, /* None */0, /* None */0, /* array */[ReasonReact.element(/* None */0, /* None */0, Materialui$ReactTemplate.Toolbar[/* make */0](/* None */0, /* array */[ReasonReact.element(/* None */0, /* None */0, Materialui$ReactTemplate.IconButton[/* make */0](/* None */0, /* Some */["contrast"], /* None */0, /* None */0, /* None */0, /* Some */["Menu"], /* array */["face"]))]))]));
+      return ReasonReact.element(/* None */0, /* None */0, Materialui$ReactTemplate.AppBar[/* make */1](/* None */0, /* None */0, /* None */0, /* array */[ReasonReact.element(/* None */0, /* None */0, Materialui$ReactTemplate.Toolbar[/* make */0](/* None */0, /* array */[
+                                ReasonReact.element(/* None */0, /* None */0, Materialui$ReactTemplate.IconButton[/* make */0](/* None */0, /* Some */["contrast"], /* None */0, /* None */0, /* None */0, /* Some */["Menu"], /* array */["face"])),
+                                ReasonReact.element(/* None */0, /* None */0, Materialui$ReactTemplate.Button[/* make */0](/* Some */[/* true */1], /* None */0, /* None */0, /* None */0, /* array */["Click"]))
+                              ]))]));
     });
   newrecord[/* initialState */10] = (function () {
       return initialState;

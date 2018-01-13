@@ -22,8 +22,7 @@
   "suffix": ".bs.js",
   "namespace": true,
   "bs-dependencies": [
-    "reason-react",
-    "bs-batteries"
+    "reason-react"
     // ,"bs-material-ui"
   ],
   // "bs-dev-dependencies": [
